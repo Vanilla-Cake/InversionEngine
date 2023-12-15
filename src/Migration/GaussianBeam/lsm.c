@@ -62,7 +62,7 @@ int main(int argc, char *argv[])
     seiSum = 0;
     migSum = 0;
 
-    for (i = 0; i < ntr * nshot; i++)
+    for (i = 0; i < ntr * nshot * nt; i++)
     {
         fread(&seiNum, sizeof(float), 1, seisfp);
         seiSum =seiSum+ fabs(seiNum);

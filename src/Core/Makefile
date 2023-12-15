@@ -1,9 +1,9 @@
 
-GCC=gcc
+# GCC=gcc
 
-MPICC=mpicc
+# MPICC=mpicc
 
-FLAGS = -ld_classic -lm #if not macOS, remove -ld_classic
+# FLAGS = -ld_classic -lm #if not macOS, remove -ld_classic
 
 PAR_OBJ =  atopkge.o errpkge.o getpars.o subcalls.o syscalls.o
 
@@ -13,7 +13,7 @@ CORE_OBJ = alloc.o complex.o franuni.o fft.o sinc.o
 
 CORE = alloc.c complex.c franuni.c fft.c sinc.c
 
-INCLUDE = -I../Include
+INCLUDE = -I../include
 
 LIB = -L../lib
 

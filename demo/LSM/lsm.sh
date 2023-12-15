@@ -9,14 +9,14 @@
 
 
 # head file parameters
-ntr=100
+ntr=737
 dtr=12.5
 ftr=0
-dftr=50
+dftr=0
 
-nshot=150
-dshot=50
-fshot=50
+nshot=20
+dshot=450
+fshot=0
 
 # forward parameters
 naper=150
@@ -33,7 +33,7 @@ orgfile=shot_0.dat # output
 
 # LSM parameters
 R1name=resMig_0.dat
-iters=1
+iters=2
 
 ../../bin/generate nx=$nx nz=$nz name=$R1name
 
@@ -42,8 +42,8 @@ iters=1
     nshot=$nshot dshot=$dshot fshot=$fshot 
 
 # generate the seismic file
-../../bin/forward naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
-    reftfile=$reftfile orgfile=$orgfile vfile=$vfile useOuterreflectivity=0
+../../bin/forwardGBM naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
+    reftfile=$reftfile orgfile=$orgfile vfile=$vfile useOuterreflectivity=0 ntr=$ntr dtr=$dtr nshot=$nshot
 
 # copy the seismic file
 cp $orgfile orgseis.dat
@@ -60,24 +60,27 @@ do
 
     resMig=resMig_$((i-1)).dat
     newresMig=resMig_${i}.dat
-    
+
+
+    #forward
+    ../../bin/forwardGBM naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
+            reftfile=$resMig orgfile=$seis vfile=$vfile useOuterreflectivity=1  ntr=$ntr dtr=$dtr nshot=$nshot
+        
+    # subtract
+    ../../bin/subtract nx=$nx nz=$nz nt=$nt ntr=$ntr nshot=$nshot originShotname=$orgseis newShotname=$seis subtractDataname=$newseis 
 
     # migration
-    mpirun -n 4 ../../bin/migration naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
-            seifile=$seis vfile=$vfile imgfile=$R
-    
+    mpirun -n 4 ../../bin/migrationGBM naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
+            seifile=$newseis vfile=$vfile imgfile=$R ntr=$ntr dtr=$dtr nshot=$nshot # R gk 
+
     # forward
-    ../../bin/forward naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
-            reftfile=$R orgfile=$newseis vfile=$vfile useOuterreflectivity=1
+    ../../bin/forwardGBM naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
+            reftfile=$R orgfile=$seis vfile=$vfile useOuterreflectivity=1 ntr=$ntr dtr=$dtr nshot=$nshot
     
+
+
     # LSM
-    ../../bin/lsm seisname=$newseis migname=$R resMigname=$resMig newresMIGname=$newresMig
+    ../../bin/lsm seisname=$seis migname=$R resMigname=$resMig newresMIGname=$newresMig ntr=$ntr nshot=$nshot nx=$nx nz=$nz 
 
-    # forward
-    ../../bin/forward naper=$naper nt=$nt nx=$nx nz=$nz dt=$dt dx=$dx dz=$dz amax=$amax \
-            reftfile=$newresMig orgfile=$seis vfile=$vfile useOuterreflectivity=1
-
-    # subtract
-    ../../bin/subtract nx=$nx nz=$nz originShotname=$orgseis newShotname=$seis subtractDataname=$newseis
 
 done

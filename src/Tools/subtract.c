@@ -45,7 +45,7 @@ int main(int argc, char *argv[])
     newShotfp = fopen(newShotname, "rb");
     subtractDatafp = fopen(subtractDataname, "wb");
 
-    for (i = 0; i < ntr * nshot; i++)
+    for (i = 0; i < ntr * nshot * nt; i++)
     {
         fread(&originShot, sizeof(float), 1, originShotfp);
         fread(&newShot, sizeof(float), 1, newShotfp);

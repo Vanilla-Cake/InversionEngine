@@ -1,9 +1,9 @@
 
-GCC=gcc
+# GCC=gcc
 
-MPICC=mpicc
+# MPICC=mpicc
 
-FLAGS = -ld_classic -lm #if not macOS, remove -ld_classic
+# FLAGS = -ld_classic -lm #if not macOS, remove -ld_classic
 
 INCLUDE = -I../../include
 

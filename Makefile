@@ -1,23 +1,30 @@
+GCC=gcc
+
+MPICC=mpicc
+
+FLAGS = -ld_classic -lm -O3 #if not macOS, remove -ld_classic
+
+MODULES = \
+	src/Core/ \
+	src/Migration/GaussianBeam \
+	src/Migration/Kirchhoff \
+	src/Tools \
+	src/Forward
 
 
+export GCC MPICC FLAGS
 
 all:
-	cd src/Core/ && $(MAKE)
-	cd src/Migration/GaussianBeam && $(MAKE)
-	cd src/Tools && $(MAKE)
-	cd src/Forward && $(MAKE)
+	$(foreach module, $(MODULES), $(MAKE) -C $(module);)
 
 install:
-	cd src/Core/ && $(MAKE) install
-	cd src/Migration/GaussianBeam && $(MAKE) install
-	cd src/Tools && $(MAKE) install
-	cd src/Forward && $(MAKE) install
+	$(foreach module, $(MODULES), $(MAKE) -C $(module) install;)
 
 clean:
-	cd src/Core/ && $(MAKE) clean
-	cd src/Migration/GaussianBeam && $(MAKE) clean
-	cd src/Tools && $(MAKE) clean
-	cd src/Forward && $(MAKE) clean
+	$(foreach module, $(MODULES), $(MAKE) -C $(module) clean;)
+
+
+
 	
 
 
