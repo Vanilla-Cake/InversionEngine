@@ -31,7 +31,7 @@ cwp, so it can be used freely if you want to use
 these function to program free softare or commercial
 softare 
 *******************************************************/
-#include "complex.h"
+#include "mycomplex.h"
 complex cadd(complex a, complex b)
 {
 	complex c;

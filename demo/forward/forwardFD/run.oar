@@ -1,0 +1,34 @@
+#!/bin/bash
+#OAR -l nodes=1/core=32,walltime=00:30:00
+#OAR --project pr-seiscope
+#OAR -n SEM46_coupling
+#OAR -t devel
+
+#environment load
+ulimit -s unlimited
+
+source ~/.nix-profile/bin/iccvars.sh -arch intel64
+source ~/.nix-profile/compilers_and_libraries_2019.3.199/linux/mpi/intel64/bin/mpivars.sh
+
+
+cd $OAR_WORKDIR
+# Number of cores
+nbcores=`cat $OAR_NODE_FILE|wc -l`
+# Number of nodes
+nbnodes=`cat $OAR_NODE_FILE|sort|uniq|wc -l`
+#Name of the first node
+firstnode=`head -1 $OAR_NODE_FILE`
+#Number of cores allocated on the first node (it is the same on all the nodes)
+pernode=`grep $firstnode $OAR_NODE_FILE|wc -l`
+ 
+echo $nbnodes
+echo $nbcores
+
+cat $OAR_NODE_FILE
+omp=8
+export MKL_NUM_THREADS=${omp}
+export OMP_NUM_THREADS=${omp}
+
+#here, the line need to be manually adapted with the number of mpi process by node after -perhost and the total number of mpi process after -n
+mpiexec.hydra -genvall -f $OAR_NODE_FILE -bootstrap-exec oarsh -perhost 32 -n 32 ../../bin/seisM2D Marm_OBC.inp
+

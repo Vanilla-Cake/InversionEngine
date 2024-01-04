@@ -17,7 +17,7 @@
 #endif
 #ifndef COMPLEX_H
 #define COMPLEX_H
-#include "complex.h"
+#include "mycomplex.h"
 #endif
 #ifndef FRANUNI_H
 #define FRANUNI_H

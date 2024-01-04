@@ -9,10 +9,15 @@ MODULES = \
 	src/Migration/GaussianBeam \
 	src/Migration/Kirchhoff \
 	src/Tools \
-	src/Forward
+	src/Forward \
+	src/Forward/FD \
+
+# IFLAGS=-I./src/include
+
+EXEBIN=bin/
 
 
-export GCC MPICC FLAGS
+export GCC MPICC FLAGS EXEBIN
 
 all:
 	$(foreach module, $(MODULES), $(MAKE) -C $(module);)

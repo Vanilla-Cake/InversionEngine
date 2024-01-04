@@ -1,0 +1,14 @@
+{
+    "files.associations": {
+        "mycomplex.h": "c",
+        "__verbose_abort": "c",
+        "ccomplex": "c",
+        "complex": "c",
+        "version": "c",
+        "algorithm": "c",
+        "core": "c",
+        "svd": "c",
+        "numeric": "c",
+        "cmath": "c"
+    }
+}
